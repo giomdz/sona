@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { songs } from './data/songs'
+import SongCard from './components/SongCard'
 import './App.css'
 
 function App(){
@@ -27,11 +28,11 @@ function App(){
             <p>No songs found. Try another artist. </p>
           )}
         {filteredSongs.map((song) => (
-          <article key={song.id}>
-            <h3>{song.title}</h3>
-            <p>{song.artist}</p>
-            <p>{song.genre} : {song.mood}</p>
-          </article>
+          <SongCard 
+          key = {song.id} 
+          song={song} 
+          featured={song.id === 1}
+          />
         ))}
       </section>
     </main>
