@@ -5,10 +5,27 @@ import './App.css'
 
 function App(){
   const [search, setSearch] = useState('')
-  const filteredSongs = songs.filter((song) => 
-  song.artist.toLowerCase().includes(search.toLowerCase()) ||
-  song.title.toLowerCase().includes(search.toLowerCase())
-)
+  const [selectedMood, setSelectedMood] = useState('All')
+  const [favorites, setFavorites] = useState([])
+  function toggleFavorite(songId) {
+  setFavorites((currentFavorites) => {
+    if (currentFavorites.includes(songId)) {
+      return currentFavorites.filter((id) => id !== songId)
+    }
+
+    return [...currentFavorites, songId]
+  })
+}
+  const filteredSongs = songs.filter((song) => {
+  const matchesSearch =
+    song.artist.toLowerCase().includes(search.toLowerCase()) ||
+    song.title.toLowerCase().includes(search.toLowerCase())
+
+  const matchesMood =
+    selectedMood === 'All' || song.mood === selectedMood
+
+  return matchesSearch && matchesMood
+})
 
   return (
     <main>
@@ -18,6 +35,20 @@ function App(){
 
       <section>
         <h2>Discover Songs</h2>
+        <div>
+  {['All', 'Upbeat', 'Chill', 'Dreamy'].map((mood) => (
+    <button
+      key={mood}
+      onClick={() => setSelectedMood(mood)}
+      style={{
+        backgroundColor: selectedMood === mood ? 'purple' : 'lightgray',
+        color: selectedMood === mood ? 'white' : 'black'
+      }}
+    >
+      {mood}
+    </button>
+  ))}
+</div>
         <input
           type="text"
           placeholder="Search by song or artist ..."
@@ -32,6 +63,8 @@ function App(){
           key = {song.id} 
           song={song} 
           featured={song.id === 1}
+          isFavorite={favorites.includes(song.id)}
+          onToggleFavorite={toggleFavorite}
           />
         ))}
       </section>
