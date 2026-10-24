@@ -1,4 +1,5 @@
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
 import { songs } from './data/songs'
 import SongCard from './components/SongCard'
 import './App.css'
@@ -6,7 +7,14 @@ import './App.css'
 function App(){
   const [search, setSearch] = useState('')
   const [selectedMood, setSelectedMood] = useState('All')
-  const [favorites, setFavorites] = useState([])
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavorites = localStorage.getItem('favorites')
+
+    return savedFavorites ? JSON.parse(savedFavorites) : []
+  })
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  }, [favorites])
   function toggleFavorite(songId) {
   setFavorites((currentFavorites) => {
     if (currentFavorites.includes(songId)) {
